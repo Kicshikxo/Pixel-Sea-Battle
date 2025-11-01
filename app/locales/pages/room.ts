@@ -25,6 +25,10 @@ export default {
     I: { en: 'I', ru: 'И' },
     J: { en: 'J', ru: 'К' },
   },
+  boardReady: {
+    en: 'Ready',
+    ru: 'Готово',
+  },
   confirmLeave: {
     en: 'Confirm leave',
     ru: 'Подтвердите выход',

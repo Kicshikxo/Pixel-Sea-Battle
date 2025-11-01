@@ -1,8 +1,19 @@
 <template>
   <div class="room-page">
-    <PixelContainer full-width>
-      <RoomPlayerBoards />
-    </PixelContainer>
+    <TransitionExpand>
+      <div v-if="roomStore.room" class="room-page__container">
+        <PixelContainer full-width>
+          <TransitionExpand>
+            <div v-if="roomStore.room.status === RoomStatus.PENDING">
+              <RoomPlayerBoardEdit @ready="" />
+            </div>
+            <div v-else>
+              <RoomPlayerBoards />
+            </div>
+          </TransitionExpand>
+        </PixelContainer>
+      </div>
+    </TransitionExpand>
 
     <PixelContainer full-width>
       <RoomMessages
@@ -56,6 +67,8 @@ import useRoomStore from '~/store/room'
 
 import { RoomStatus } from '@prisma/client'
 import type { RouteLocation } from 'vue-router'
+import RoomPlayerBoardEdit from '~/components/pages/room/RoomPlayerBoardEdit.vue'
+import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
 
 definePageMeta({
   middleware: async (to) => {
@@ -68,7 +81,6 @@ definePageMeta({
   },
 })
 
-const trpc = useTRPC()
 const { t } = useI18n()
 const toast = useToast()
 const route = useRoute('room-id')
@@ -174,6 +186,10 @@ async function handleSendMessage(messageText: string) {
   gap: 16px;
   padding: 16px;
   max-width: 1200px;
+
+  &__container {
+    width: 100%;
+  }
 }
 
 .leave-room-modal {

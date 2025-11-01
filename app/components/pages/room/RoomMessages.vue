@@ -204,7 +204,7 @@ async function handleSubmit(values: MessageFormValues) {
     }
 
     &__text:after {
-      content: '123';
+      content: '';
       display: inline-block;
       width: 1ch;
       animation: typing-dots 1s steps(3, end) infinite;
@@ -242,6 +242,7 @@ async function handleSubmit(values: MessageFormValues) {
 
   &__list-item {
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
 
     &__username {
