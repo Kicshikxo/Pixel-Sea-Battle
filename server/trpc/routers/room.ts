@@ -4,16 +4,8 @@ import { z } from 'zod'
 import { prisma } from '~~/prisma/client'
 import { trpcRouter } from '~~/server/trpc'
 import { trpcAuthProcedure } from '~~/server/trpc/middleware/auth'
+import { globalPromise } from '~~/server/trpc/utils/globalPromise'
 import { io } from '~~/socket.io'
-
-const globalPromises: Record<string, Promise<any>> = {}
-
-function globalPromise<T>(name: string, promise: () => Promise<T>): Promise<T> {
-  const lastPromise = globalPromises[name] ?? Promise.resolve()
-  const nextPromise = lastPromise.then(() => promise())
-  globalPromises[name] = nextPromise.catch(() => {})
-  return nextPromise
-}
 
 export const roomRouter = trpcRouter({
   create: trpcAuthProcedure

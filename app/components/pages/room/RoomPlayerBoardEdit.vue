@@ -1,16 +1,17 @@
 <template>
   <div class="room-board-edit">
-    <div class="room-board-edit__container">
+    <div ref="boardEditContainer" class="room-board-edit__container">
       <div class="room-board-edit__ships">
-        <Ship
+        <span
           v-for="(ship, index) in ships"
-          ref="ship"
+          ref="shipElements"
           :key="index"
-          :type="ship.type"
-          :orientation="ship.orientation"
-        />
+          class="room-board-edit__ship"
+        >
+          <Ship :type="ship.type" :orientation="ship.orientation" />
+        </span>
       </div>
-      <PlayerBoard />
+      <PlayerBoard ref="playerBoard" />
     </div>
     <PixelButton :label="$t('page.room.boardReady')" @click="handleReady" />
   </div>
@@ -28,6 +29,9 @@ import gsap from 'gsap'
 import Draggable from 'gsap/Draggable'
 gsap.registerPlugin(Draggable)
 
+const boardEditContainer = ref<HTMLElement | null>(null)
+const playerBoard = ref<InstanceType<typeof PlayerBoard>>()
+
 export type BoardShip = {
   type: ShipType
   orientation: ShipOrientation
@@ -39,9 +43,101 @@ const emits = defineEmits<{
   ready: [BoardShip[]]
 }>()
 
-const ship = ref<{ $el: HTMLElement }[]>([])
+const shipElements = ref<HTMLElement[]>([])
 
-onMounted(() => ship.value.forEach((ship) => Draggable.create(ship.$el, { inertia: false })))
+onMounted(() => {
+  if (!playerBoard.value?.boardTable) return
+
+  const boardTable = playerBoard.value.boardTable
+  const cellSize = playerBoard.value.cellSize
+  const gridOffset = playerBoard.value.gridOffset
+
+  shipElements.value.forEach((element, index) => {
+    const ship = ships.value[index]!
+
+    Draggable.create(element, {
+      type: 'x,y',
+      bounds: boardEditContainer.value,
+      onDragEnd() {
+        const elementRect = element.getBoundingClientRect()
+        const playerBoardRect = boardTable?.getBoundingClientRect()
+
+        if (
+          elementRect.left > playerBoardRect.left + gridOffset.x &&
+          elementRect.left < playerBoardRect.right &&
+          elementRect.top > playerBoardRect.top + gridOffset.y &&
+          elementRect.top < playerBoardRect.bottom
+        ) {
+          const position = {
+            x: Math.round((elementRect.left - playerBoardRect.left - gridOffset.x) / cellSize),
+            y: Math.round((elementRect.top - playerBoardRect.top - gridOffset.y) / cellSize),
+          }
+
+          const pointsAround = [
+            { x: -1, y: -1 },
+            { x: 0, y: -1 },
+            { x: 1, y: -1 },
+
+            { x: -1, y: 0 },
+            { x: 1, y: 0 },
+
+            { x: -1, y: 1 },
+            { x: 0, y: 1 },
+            { x: 1, y: 1 },
+          ]
+
+          for (const ship of ships.value) {
+            for (const offset of pointsAround) {
+              if (
+                ship.positionX === position.x + offset.x &&
+                ship.positionY === position.y + offset.y
+              ) {
+                gsap.to(element, {
+                  x: 0,
+                  y: 0,
+                  duration: 0.25,
+                  ease: 'back',
+                })
+                ship.positionX = undefined
+                ship.positionY = undefined
+                return
+              }
+            }
+          }
+
+          const snap = {
+            x: position.x * cellSize,
+            y: position.y * cellSize,
+          }
+
+          const offset = {
+            x: playerBoardRect.left + gridOffset.x + snap.x - elementRect.left,
+            y: playerBoardRect.top + gridOffset.y + snap.y - elementRect.top,
+          }
+
+          gsap.to(element, {
+            x: `+=${offset.x}`,
+            y: `+=${offset.y}`,
+            duration: 0.25,
+            ease: 'back',
+          })
+
+          ship.positionX = Math.round(position.x)
+          ship.positionY = Math.round(position.y)
+        } else {
+          gsap.to(element, {
+            x: 0,
+            y: 0,
+            duration: 0.25,
+            ease: 'back',
+          })
+          ship.positionX = undefined
+          ship.positionY = undefined
+        }
+      },
+    })
+  })
+})
 
 const ships = ref<BoardShip[]>([
   { type: ShipType.Single, orientation: ShipOrientation.Horizontal },
@@ -76,10 +172,13 @@ function handleReady() {
     gap: 8px;
   }
 
-  &__ship {
+  &__ships {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+  }
+  &__ship {
+    width: min-content;
+    height: min-content;
   }
 }
 </style>

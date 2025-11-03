@@ -1,21 +1,24 @@
 <template>
-  <div
-    :class="[
-      'ship',
-      {
-        'ship--single': type === ShipType.Single,
-        'ship--double': type === ShipType.Double,
-        'ship--triple': type === ShipType.Triple,
-        'ship--quadruple': type === ShipType.Quadruple,
-        'ship--horizontal': orientation === ShipOrientation.Horizontal,
-        'ship--vertical': orientation === ShipOrientation.Vertical,
-      },
-    ]"
-  ></div>
+  <PixelBorder>
+    <div
+      :class="[
+        'ship',
+        {
+          'ship--single': type === ShipType.Single,
+          'ship--double': type === ShipType.Double,
+          'ship--triple': type === ShipType.Triple,
+          'ship--quadruple': type === ShipType.Quadruple,
+          'ship--horizontal': orientation === ShipOrientation.Horizontal,
+          'ship--vertical': orientation === ShipOrientation.Vertical,
+        },
+      ]"
+    ></div>
+  </PixelBorder>
 </template>
 
 <script setup lang="ts">
 import { ShipOrientation, ShipType } from '@prisma/client'
+import PixelBorder from '~/components/pixel/PixelBorder.vue'
 
 const props = defineProps<{
   type: ShipType
@@ -25,25 +28,23 @@ const props = defineProps<{
 
 <style lang="scss" scoped>
 .ship {
-  height: 32px;
-  background-color: var(--px-color-black-on-light-white-on-dark);
-  transition: transform var(--transition-time-normal);
-  margin: 4px;
+  height: 28px;
+  background-color: var(--px-color-white);
 
   &--single {
-    width: 32px;
+    width: 28px;
   }
 
   &--double {
-    width: 64px;
+    width: calc(28px * 2 + 4px * 1);
   }
 
   &--triple {
-    width: 96px;
+    width: calc(28px * 3 + 4px * 2);
   }
 
   &--quadruple {
-    width: 128px;
+    width: calc(28px * 4 + 4px * 3);
   }
 
   &--horizontal {

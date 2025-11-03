@@ -163,13 +163,13 @@ async function handleSubmit(values: MessageFormValues) {
 
     &__button--desktop {
       @include on-breakpoint(sm) {
-        display: none;
+        display: none !important;
       }
     }
     &__button--mobile {
-      display: none;
+      display: none !important;
       @include on-breakpoint(sm) {
-        display: flex;
+        display: flex !important;
       }
     }
   }
