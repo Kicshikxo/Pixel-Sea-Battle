@@ -157,6 +157,13 @@ import { z } from 'zod'
 
 definePageMeta({
   auth: false,
+  middleware: () => {
+    const { session } = useAuth()
+
+    if (session.status.value === 'authenticated') {
+      return navigateTo({ name: 'index' })
+    }
+  },
 })
 
 const toast = useToast()

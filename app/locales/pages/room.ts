@@ -33,13 +33,9 @@ export default {
     en: 'Confirm leave',
     ru: 'Подтвердите выход',
   },
-  confirmSafeLeaveMessage: {
-    en: 'Are you sure you want to leave the room? Your progress will be saved',
-    ru: 'Вы уверены, что хотите выйти из комнаты? Весь прогресс будет сохранён',
-  },
-  confirmUnsafeLeaveMessage: {
-    en: 'Are you sure you want to leave the room? Your progress will be lost',
-    ru: 'Вы уверены, что хотите выйти из комнаты? Весь прогресс будет удалён',
+  confirmLeaveMessage: {
+    en: 'Are you sure you want to leave the room?',
+    ru: 'Вы уверены, что хотите выйти из комнаты?',
   },
   cancel: {
     en: 'Cancel',

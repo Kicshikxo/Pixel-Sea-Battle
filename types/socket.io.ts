@@ -2,6 +2,10 @@ import type { User } from '@prisma/client'
 import { Socket } from 'socket.io'
 import * as handlers from '~~/socket.io/handlers'
 
+export type ServerSocket = Socket<ClientToServerEvents, ServerToClientEvents> & {
+  user?: User | null
+}
+
 export interface SocketHandler<
   Event extends string,
   Data = any,
@@ -9,11 +13,7 @@ export interface SocketHandler<
   Emits extends SocketHandlerEmit<any>[] = [],
 > {
   readonly event: Event
-  handler: (
-    socket: Socket<ClientToServerEvents, ServerToClientEvents> & { user?: User | null },
-    data: Data,
-    callback?: (response?: Response) => void,
-  ) => void
+  handler: (socket: ServerSocket, data: Data, callback?: (response?: Response) => void) => void
 }
 
 export type SocketHandlerFunction<Handler extends SocketHandler<any>> =
@@ -33,10 +33,7 @@ export type SocketHandlerEmits<Handler extends SocketHandler<any>> =
 
 export interface SocketMiddleware {
   name: string
-  handler: (
-    socket: Socket<ClientToServerEvents, ServerToClientEvents> & { user?: User | null },
-    next: () => void,
-  ) => void
+  handler: (socket: ServerSocket, next: () => void) => void
 }
 
 export type Handlers = typeof handlers

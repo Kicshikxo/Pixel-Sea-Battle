@@ -127,7 +127,7 @@ onMounted(async () => {
 watch(
   () => route.query.error,
   (error) => {
-    if (error) {
+    if (error && import.meta.client) {
       toast.error(t(error as string))
       router.replace({ query: {} })
     }

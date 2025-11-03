@@ -28,11 +28,8 @@
 
     <PixelModal v-model:show="showRoomLeaveModal" :title="$t('page.room.confirmLeave')">
       <div class="leave-room-modal">
-        <span v-if="(roomStore.room?.status ?? roomLastStatus) === RoomStatus.PENDING">
-          {{ $t('page.room.confirmUnsafeLeaveMessage') }}
-        </span>
-        <span v-else>
-          {{ $t('page.room.confirmSafeLeaveMessage') }}
+        <span>
+          {{ $t('page.room.confirmLeaveMessage') }}
         </span>
 
         <div class="leave-room-modal__actions">
@@ -97,7 +94,6 @@ const roomLeaveLocation = ref<RouteLocation>()
 const roomLeaveLoading = ref(false)
 
 const roomId = computed(() => route.params.id as string)
-const roomLastStatus = ref<RoomStatus | null>(null)
 
 function beforeUnloadHandler(event: BeforeUnloadEvent) {
   event.preventDefault()
@@ -132,14 +128,8 @@ onBeforeRouteLeave(async (to) => {
 })
 
 async function handleLeaveRoom() {
-  roomLeaveLoading.value = true
-
   try {
-    roomLastStatus.value = roomStore.room?.status ?? null
-
-    if (roomLastStatus.value === RoomStatus.PENDING) {
-      await roomStore.disconnectRoom(roomId.value)
-    }
+    await roomStore.disconnectRoom(roomId.value)
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
