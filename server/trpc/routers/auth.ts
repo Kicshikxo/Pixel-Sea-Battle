@@ -2,13 +2,14 @@ import { UserType } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import bcrypt from 'bcryptjs'
 import { OAuth2Client } from 'google-auth-library'
+import { nanoid } from 'nanoid'
 import { z } from 'zod'
 import { prisma } from '~~/prisma/client'
-import { sendEmailConfirmation } from '~~/server/email'
+import { sendEmailVerification } from '~~/server/email'
 import { trpcPublicProcedure, trpcRouter } from '~~/server/trpc'
 import { trpcAuthProcedure } from '~~/server/trpc/middleware/auth'
+import { createSession } from '~~/server/trpc/utils/auth'
 import type { SessionData } from '~~/types/auth'
-import { createSession } from '../utils/auth'
 
 export const authRouter = trpcRouter({
   signUp: trpcPublicProcedure
@@ -40,7 +41,7 @@ export const authRouter = trpcRouter({
         },
       })
 
-      sendEmailConfirmation(ctx.event, input.email)
+      sendEmailVerification(ctx.event, input.email)
 
       return await createSession(ctx.event, user)
     }),
@@ -120,14 +121,21 @@ export const authRouter = trpcRouter({
     }),
 
   guestSignIn: trpcPublicProcedure.mutation(async ({ ctx }) => {
-    const user = await prisma.user.create({
-      data: {
-        type: UserType.GUEST,
-        username: `guest-${Math.random().toString(36).slice(2, 8)}`,
-      },
-    })
+    try {
+      const user = await prisma.user.create({
+        data: {
+          type: UserType.GUEST,
+          username: `guest-${nanoid(8)}`,
+        },
+      })
 
-    return await createSession(ctx.event, user)
+      return await createSession(ctx.event, user)
+    } catch {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'error.auth.guestSignInFailed',
+      })
+    }
   }),
 
   info: trpcAuthProcedure.query(async ({ ctx }) => {

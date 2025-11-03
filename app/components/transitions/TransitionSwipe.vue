@@ -44,8 +44,7 @@ $speeds: (
     #{$transition}-enter-active,
     #{$transition}-leave-active,
     #{$transition}-move {
-      transition:
-        transform #{$time} cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      transition: transform #{$time} cubic-bezier(0.175, 0.885, 0.32, 1.275),
         opacity #{$time} cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 

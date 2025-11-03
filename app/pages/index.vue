@@ -20,29 +20,27 @@
       </div>
 
       <div class="index-page__rooms">
-        <div>
-          <TransitionExpand>
-            <RoomsList
-              v-if="roomsStore.activeRooms.length"
-              :title="$t('page.index.room.listActive')"
-              :rooms="roomsStore.activeRooms"
-              :rooms-loading="roomsLoading"
-              :join-room-loading="joinRoomLoading"
-              @join-room="handleJoinRoom"
-            />
-          </TransitionExpand>
+        <TransitionExpand>
+          <RoomsList
+            v-if="roomsStore.activeRooms.length"
+            :title="$t('page.index.room.listActive')"
+            :rooms="roomsStore.activeRooms"
+            :rooms-loading="roomsLoading"
+            :join-room-loading="joinRoomLoading"
+            @join-room="handleJoinRoom"
+          />
+        </TransitionExpand>
 
-          <TransitionExpand>
-            <RoomsList
-              v-if="roomsStore.publicRooms.length || roomsLoading"
-              :title="$t('page.index.room.listPublic')"
-              :rooms="roomsStore.publicRooms ?? []"
-              :rooms-loading="roomsLoading"
-              :join-room-loading="joinRoomLoading"
-              @join-room="handleJoinRoom"
-            />
-          </TransitionExpand>
-        </div>
+        <TransitionExpand>
+          <RoomsList
+            v-if="roomsStore.publicRooms.length || roomsLoading"
+            :title="$t('page.index.room.listPublic')"
+            :rooms="roomsStore.publicRooms ?? []"
+            :rooms-loading="roomsLoading"
+            :join-room-loading="joinRoomLoading"
+            @join-room="handleJoinRoom"
+          />
+        </TransitionExpand>
       </div>
     </PixelContainer>
 
@@ -54,7 +52,7 @@
       <div class="create-room-modal">
         <PixelForm
           ref="createRoomForm"
-          :validation-schema="createRoomValidationSchema"
+          :validation-schema="createRoomSchema"
           @submit="handleCreateRoom"
         >
           <PixelFormTextInput
@@ -137,7 +135,7 @@ watch(
   },
 )
 
-const createRoomValidationSchema = computed(() =>
+const createRoomSchema = computed(() =>
   z.object({
     name: z
       .string()
@@ -147,7 +145,7 @@ const createRoomValidationSchema = computed(() =>
     private: z.boolean().default(false),
   }),
 )
-type CreateRoomFormValues = z.infer<typeof createRoomValidationSchema.value>
+type CreateRoomFormValues = z.infer<typeof createRoomSchema.value>
 
 async function handleCreateRoom(values: CreateRoomFormValues) {
   createRoomLoading.value = true

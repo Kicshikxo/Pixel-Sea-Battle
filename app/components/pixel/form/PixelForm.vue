@@ -7,12 +7,12 @@
     @submit="handleSubmit"
   >
     <TransitionSwipe v-if="animatedTitle">
-      <div v-if="title" class="px-form__title" :key="title">
-        {{ title }}
+      <div class="px-form__title" :key="title">
+        <slot name="title">{{ title }}</slot>
       </div>
     </TransitionSwipe>
-    <div v-else-if="title" class="px-form__title">
-      {{ title }}
+    <div v-else class="px-form__title">
+      <slot name="title">{{ title }}</slot>
     </div>
 
     <slot :form-context="formContext" />

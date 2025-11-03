@@ -82,10 +82,7 @@ $speeds: (
     #{$transition}-leave-active,
     #{$transition}-move {
       overflow: hidden;
-      transition:
-        width #{$time},
-        height #{$time},
-        opacity #{$time};
+      transition: width #{$time}, height #{$time}, opacity #{$time};
     }
 
     #{$transition}-enter-from,

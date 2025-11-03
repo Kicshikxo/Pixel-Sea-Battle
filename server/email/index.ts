@@ -1,7 +1,7 @@
 import { getRequestURL, H3Event } from 'h3'
 import { createTransport } from 'nodemailer'
 import { prisma } from '~~/prisma/client'
-import emailConfirmationTemplate from './templates/emailConfirmation'
+import emailVerificationTemplate from './templates/emailVerification'
 import passwordRecoveryTemplate from './templates/passwordRecovery'
 
 const transporter = createTransport(
@@ -26,19 +26,19 @@ function renderTemplate(html: string, values: { callback: string }) {
   )
 }
 
-export async function sendEmailConfirmation(event: H3Event, email: string) {
+export async function sendEmailVerification(event: H3Event, email: string) {
   const user = await prisma.user.findUnique({
     where: { email: email },
-    include: { emailConfirmation: true },
+    include: { emailVerification: true },
   })
 
   if (!user || !user.email) return
 
   try {
-    if (user.emailConfirmation) {
-      await prisma.userEmailConfirmation.delete({ where: { userId: user.id } })
+    if (user.emailVerification) {
+      await prisma.userEmailVerification.delete({ where: { userId: user.id } })
     }
-    const emailConfirmation = await prisma.userEmailConfirmation.create({
+    const emailVerification = await prisma.userEmailVerification.create({
       data: {
         userId: user.id,
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -48,8 +48,8 @@ export async function sendEmailConfirmation(event: H3Event, email: string) {
     await transporter.sendMail({
       to: user.email,
       subject: 'Подтвердите адрес электронной почты',
-      html: renderTemplate(emailConfirmationTemplate, {
-        callback: `${getRequestURL(event).origin}/email-confirmation/${emailConfirmation.id}`,
+      html: renderTemplate(emailVerificationTemplate, {
+        callback: `${getRequestURL(event).origin}/email-verification/${emailVerification.id}`,
       }),
     })
   } catch (error) {

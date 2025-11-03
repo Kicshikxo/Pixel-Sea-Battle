@@ -21,7 +21,7 @@ model User {
 
   sessions          UserSession[]
   passwordRecovery  UserPasswordRecovery?
-  emailConfirmation UserEmailConfirmation?
+  emailVerification UserEmailVerification?
 
   emailVerifiedAt DateTime? @map("email_verified_at")
 
@@ -51,8 +51,8 @@ model UserSession {
   @@map("user_sessions")
 }
 
-model UserEmailConfirmation {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @map("confirmation_id") @db.Uuid
+model UserEmailVerification {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @map("verification_id") @db.Uuid
 
   user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId String @unique @map("user_id") @db.Uuid
@@ -61,7 +61,7 @@ model UserEmailConfirmation {
   expiresAt DateTime @map("expires_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@map("user_email_confirmation")
+  @@map("user_email_verification")
 }
 
 model UserPasswordRecovery {

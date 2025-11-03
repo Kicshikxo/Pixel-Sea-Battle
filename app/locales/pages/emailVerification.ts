@@ -1,28 +1,28 @@
 import type { Locales } from '~~/types/i18n'
 
 export default {
-  emailConfirmation: {
-    en: 'Email confirmation',
+  emailVerification: {
+    en: 'Email verification',
     ru: 'Подтверждение почты',
   },
-  unableToConfirmEmail: {
-    en: 'Unable to confirm email',
+  unableToVerifyEmail: {
+    en: 'Unable to verify email',
     ru: 'Невозможно подтвердить почту',
   },
   openIndexPage: {
     en: 'Open index page',
     ru: 'На главную страницу',
   },
-  emailForConfirmation: {
-    en: 'Email for confirmation',
+  emailForVerification: {
+    en: 'Email for verification',
     ru: 'Почта для подтверждения',
   },
-  confirmEmail: {
-    en: 'Confirm email',
+  verifyEmail: {
+    en: 'Verify email',
     ru: 'Подтвердить почту',
   },
-  emailConfirmed: {
-    en: 'Email confirmed',
+  emailVerified: {
+    en: 'Email verified',
     ru: 'Почта подтверждена',
   },
 } satisfies Locales

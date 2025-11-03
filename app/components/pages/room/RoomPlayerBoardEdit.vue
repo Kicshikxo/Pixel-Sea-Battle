@@ -73,38 +73,6 @@ onMounted(() => {
             y: Math.round((elementRect.top - playerBoardRect.top - gridOffset.y) / cellSize),
           }
 
-          const pointsAround = [
-            { x: -1, y: -1 },
-            { x: 0, y: -1 },
-            { x: 1, y: -1 },
-
-            { x: -1, y: 0 },
-            { x: 1, y: 0 },
-
-            { x: -1, y: 1 },
-            { x: 0, y: 1 },
-            { x: 1, y: 1 },
-          ]
-
-          for (const ship of ships.value) {
-            for (const offset of pointsAround) {
-              if (
-                ship.positionX === position.x + offset.x &&
-                ship.positionY === position.y + offset.y
-              ) {
-                gsap.to(element, {
-                  x: 0,
-                  y: 0,
-                  duration: 0.25,
-                  ease: 'back',
-                })
-                ship.positionX = undefined
-                ship.positionY = undefined
-                return
-              }
-            }
-          }
-
           const snap = {
             x: position.x * cellSize,
             y: position.y * cellSize,
@@ -122,8 +90,8 @@ onMounted(() => {
             ease: 'back',
           })
 
-          ship.positionX = Math.round(position.x)
-          ship.positionY = Math.round(position.y)
+          ship.positionX = position.x
+          ship.positionY = position.y
         } else {
           gsap.to(element, {
             x: 0,

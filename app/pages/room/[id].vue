@@ -58,20 +58,22 @@ import RoomPlayerBoards from '~/components/pages/room/RoomPlayerBoards.vue'
 import PixelButton from '~/components/pixel/PixelButton.vue'
 import PixelContainer from '~/components/pixel/PixelContainer.vue'
 import PixelModal from '~/components/pixel/PixelModal.vue'
+import RoomPlayerBoardEdit from '~/components/pages/room/RoomPlayerBoardEdit.vue'
+import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
 
 import useChatStore from '~/store/chat'
 import useRoomStore from '~/store/room'
 
 import { RoomStatus } from '@prisma/client'
-import type { RouteLocation } from 'vue-router'
-import RoomPlayerBoardEdit from '~/components/pages/room/RoomPlayerBoardEdit.vue'
-import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
+import type { RouteLocation, RouteLocationNormalizedLoaded } from 'vue-router'
 
 definePageMeta({
   middleware: async (to) => {
     const trpc = useTRPC()
+    const { params } = to as RouteLocationNormalizedLoaded<'room-id'>
+
     try {
-      await trpc.room.join.mutate({ id: to.params.id as string })
+      await trpc.room.join.mutate({ id: params.id })
     } catch (error: any) {
       return navigateTo({ name: 'index', query: { error: error.message } })
     }
@@ -128,6 +130,8 @@ onBeforeRouteLeave(async (to) => {
 })
 
 async function handleLeaveRoom() {
+  roomLeaveLoading.value = true
+
   try {
     await roomStore.disconnectRoom(roomId.value)
   } catch (error: any) {

@@ -1,51 +1,51 @@
 <template>
-  <div class="email-confirmation-page">
+  <div class="email-verification-page">
     <PixelContainer>
-      <div class="email-confirmation-page__container">
+      <div class="email-verification-page__container">
         <TransitionExpand>
           <PixelForm
-            v-if="confirmed === false"
-            :title="$t('page.emailConfirmation.emailConfirmation')"
-            @submit="handleConfirmEmail"
+            v-if="verified === false"
+            :title="$t('page.emailVerification.emailVerification')"
+            @submit="handleVerifyEmail"
           >
-            <div v-if="Boolean(userError) === false" class="email-confirmation-page__column">
+            <div v-if="Boolean(userError) === false" class="email-verification-page__column">
               <span style="width: 100%">
-                {{ $t('page.emailConfirmation.emailForConfirmation') }}:
+                {{ $t('page.emailVerification.emailForVerification') }}:
                 <PixelBorder full-width>
-                  <span class="email-confirmation-page__email">{{ userInfo?.email }}</span>
+                  <span class="email-verification-page__email">{{ userInfo?.email }}</span>
                 </PixelBorder>
               </span>
 
               <PixelButton
                 type="submit"
-                :label="$t('page.emailConfirmation.confirmEmail')"
+                :label="$t('page.emailVerification.verifyEmail')"
                 :loading="loading"
                 :disabled="Boolean(userError)"
                 full-width
               />
             </div>
 
-            <div v-else class="email-confirmation-page__column">
+            <div v-else class="email-verification-page__column">
               <span v-if="userError">
                 {{ $t(userError?.message) }}
               </span>
               <span v-else>
-                {{ $t('page.emailConfirmation.unableToConfirmEmail') }}
+                {{ $t('page.emailVerification.unableToVerifyEmail') }}
               </span>
 
               <PixelButton
-                :label="$t('page.emailConfirmation.openIndexPage')"
+                :label="$t('page.emailVerification.openIndexPage')"
                 :loading="loading"
                 @click="handleOpenIndexPage"
                 full-width
               />
             </div>
           </PixelForm>
-          <div v-else class="email-confirmation-page__column">
-            <span> {{ $t('page.emailConfirmation.emailConfirmed') }} </span>
+          <div v-else class="email-verification-page__column">
+            <span> {{ $t('page.emailVerification.emailVerified') }} </span>
 
             <PixelButton
-              :label="$t('page.emailConfirmation.openIndexPage')"
+              :label="$t('page.emailVerification.openIndexPage')"
               :loading="loading"
               full-width
               @click="handleOpenIndexPage"
@@ -70,29 +70,29 @@ definePageMeta({
 
 const { t } = useI18n()
 const toast = useToast()
-const route = useRoute('email-confirmation-id')
+const route = useRoute('email-verification-id')
 const router = useRouter()
 const trpc = useTRPC()
 
 const loading = ref(false)
-const confirmed = ref(false)
+const verified = ref(false)
 
-const { data: userInfo, error: userError } = await trpc.emailConfirmation.info.useQuery({
-  emailConfirmationId: route.params.id,
+const { data: userInfo, error: userError } = await trpc.emailVerification.info.useQuery({
+  emailVerificationId: route.params.id,
 })
 
 onMounted(() => {
   if (userError.value) toast.error(t(userError.value.message))
 })
 
-async function handleConfirmEmail() {
+async function handleVerifyEmail() {
   loading.value = true
   try {
-    await trpc.emailConfirmation.confirm.mutate({
-      emailConfirmationId: route.params.id,
+    await trpc.emailVerification.verify.mutate({
+      emailVerificationId: route.params.id,
     })
 
-    confirmed.value = true
+    verified.value = true
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
@@ -108,7 +108,7 @@ async function handleOpenIndexPage() {
 </script>
 
 <style lang="scss" scoped>
-.email-confirmation-page {
+.email-verification-page {
   flex: 1;
   display: flex;
   justify-content: center;

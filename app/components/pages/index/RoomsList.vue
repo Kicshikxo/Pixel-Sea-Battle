@@ -83,6 +83,7 @@ const emits = defineEmits<{
 
   &__loader {
     margin: 0 auto;
+    height: 40px;
   }
 
   &__list {

@@ -14,10 +14,10 @@ const cleanupTasks: { label: string; handler: () => Promise<number> }[] = [
     },
   },
   {
-    label: 'email confirmations',
+    label: 'email verifications',
     handler: async () => {
       return (
-        await prisma.userEmailConfirmation.deleteMany({
+        await prisma.userEmailVerification.deleteMany({
           where: { expiresAt: { lt: new Date() } },
         })
       ).count

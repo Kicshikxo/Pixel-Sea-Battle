@@ -1,11 +1,6 @@
 <template>
   <div class="room-messages">
-    <PixelForm
-      ref="form"
-      :validation-schema="messageValidationSchema"
-      full-width
-      @submit="handleSubmit"
-    >
+    <PixelForm ref="form" :validation-schema="newMessageSchema" full-width @submit="handleSubmit">
       <div class="room-messages__input">
         <PixelFormTextInput
           name="message"
@@ -124,9 +119,9 @@ const emits = defineEmits<{
   'send-message': [message: string]
 }>()
 
-const form = ref<{ formContext: FormContext<MessageFormValues> }>()
+const form = ref<{ formContext: FormContext<NewMessageFormValues> }>()
 
-const messageValidationSchema = computed(() =>
+const newMessageSchema = computed(() =>
   z.object({
     message: z
       .string()
@@ -134,13 +129,13 @@ const messageValidationSchema = computed(() =>
       .default(''),
   }),
 )
-type MessageFormValues = z.infer<typeof messageValidationSchema.value>
+type NewMessageFormValues = z.infer<typeof newMessageSchema.value>
 
 defineExpose({
   formContext: () => form.value?.formContext,
 })
 
-async function handleSubmit(values: MessageFormValues) {
+async function handleSubmit(values: NewMessageFormValues) {
   if (values.message.length === 0) return
   emits('send-message', values.message)
 }
@@ -226,6 +221,11 @@ async function handleSubmit(values: MessageFormValues) {
         content: '...';
       }
     }
+  }
+
+  &__loader {
+    margin: 0 auto;
+    height: 40px;
   }
 
   &__list {

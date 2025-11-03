@@ -29,4 +29,8 @@ export default {
     en: 'Google user not found',
     ru: 'Пользователь Google не найден',
   },
+  guestSignInFailed: {
+    en: 'Guest sign in failed',
+    ru: 'Не удалось войти как гость',
+  },
 } satisfies Locales

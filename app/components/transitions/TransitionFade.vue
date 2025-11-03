@@ -37,10 +37,7 @@ $speeds: (
   #{$transition}-enter-active,
   #{$transition}-leave-active,
   #{$transition}-move {
-    transition:
-      width #{$time},
-      height #{$time},
-      opacity #{$time};
+    transition: opacity #{$time};
   }
 
   #{$transition}-enter-from,

@@ -176,8 +176,8 @@ const action = ref<'sign-in' | 'sign-up'>(
   route.query['sign-in'] !== undefined
     ? 'sign-in'
     : route.query['sign-up'] !== undefined
-      ? 'sign-up'
-      : 'sign-in',
+    ? 'sign-up'
+    : 'sign-in',
 )
 
 const loading = ref(false)
@@ -191,7 +191,7 @@ watch(
   { immediate: true },
 )
 
-const signInValidationSchema = computed(() =>
+const signInSchema = computed(() =>
   z.object({
     email: z
       .string()
@@ -205,9 +205,9 @@ const signInValidationSchema = computed(() =>
       .default(''),
   }),
 )
-type SignInFormValues = z.infer<typeof signInValidationSchema.value>
+type SignInFormValues = z.infer<typeof signInSchema.value>
 
-const signUpValidationSchema = computed(() =>
+const signUpSchema = computed(() =>
   z.object({
     email: z
       .string()
@@ -226,10 +226,10 @@ const signUpValidationSchema = computed(() =>
       .default(''),
   }),
 )
-type SignUpFormValues = z.infer<typeof signUpValidationSchema.value>
+type SignUpFormValues = z.infer<typeof signUpSchema.value>
 
 const validationSchema = computed(() =>
-  action.value === 'sign-in' ? signInValidationSchema.value : signUpValidationSchema.value,
+  action.value === 'sign-in' ? signInSchema.value : signUpSchema.value,
 )
 
 async function handleGoogleSignIn(response: CredentialResponse) {
