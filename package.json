@@ -31,7 +31,6 @@
     "gsap": "3.13.0",
     "nodemailer": "7.0.10",
     "nuxt": "4.2.0",
-    "nuxt-typed-router": "4.0.2",
     "nuxt-vue3-google-signin": "0.0.13",
     "pinia": "3.0.3",
     "socket.io": "4.8.1",

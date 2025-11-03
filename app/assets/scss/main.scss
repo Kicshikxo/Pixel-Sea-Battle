@@ -8,12 +8,3 @@ html {
 .dark-mode {
   color-scheme: dark;
 }
-
-.page-fade-enter-active,
-.page-fade-leave-active {
-  transition: opacity 0.15s;
-}
-.page-fade-enter-from,
-.page-fade-leave-to {
-  opacity: 0;
-}

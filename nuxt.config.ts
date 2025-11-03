@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       ],
     },
 
-    pageTransition: { name: 'page-fade', mode: 'out-in' },
+    pageTransition: { name: 'transition-fade-normal', mode: 'out-in' },
   },
 
   css: [
@@ -78,11 +78,15 @@ export default defineNuxtConfig({
     ],
     '@pinia/nuxt',
     '@vee-validate/nuxt',
-    'nuxt-typed-router',
   ],
 
   build: {
     transpile: ['trpc-nuxt', 'vue-toastification'],
+  },
+
+  experimental: {
+    typedPages: true,
+    extraPageMetaExtractionKeys: ['auth'],
   },
 
   runtimeConfig: {
