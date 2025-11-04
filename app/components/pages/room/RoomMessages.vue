@@ -86,7 +86,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelForm from '~/components/pixel/form/PixelForm.vue'
 import PixelFormTextInput from '~/components/pixel/form/PixelFormTextInput.vue'
 import PixelButton from '~/components/pixel/PixelButton.vue'
@@ -95,7 +95,7 @@ import PixelLoader from '~/components/pixel/PixelLoader.vue'
 import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
 
 import type { RoomMessage, User } from '@prisma/client'
-import type { FormContext } from 'vee-validate'
+import type { FormActions, FormContext } from 'vee-validate'
 import { z } from 'zod'
 
 const { t } = useI18n()
@@ -116,10 +116,8 @@ const props = withDefaults(
   },
 )
 const emits = defineEmits<{
-  'send-message': [message: string]
+  'send-message': [message: string, formActions: FormActions<NewMessageFormValues>]
 }>()
-
-const form = ref<{ formContext: FormContext<NewMessageFormValues> }>()
 
 const newMessageSchema = computed(() =>
   z.object({
@@ -129,15 +127,20 @@ const newMessageSchema = computed(() =>
       .default(''),
   }),
 )
-type NewMessageFormValues = z.infer<typeof newMessageSchema.value>
+export type NewMessageFormValues = z.infer<typeof newMessageSchema.value>
+
+const form = ref<{ formContext: FormContext<NewMessageFormValues> }>()
 
 defineExpose({
   formContext: () => form.value?.formContext,
 })
 
-async function handleSubmit(values: NewMessageFormValues) {
+async function handleSubmit(
+  values: NewMessageFormValues,
+  formActions: FormActions<NewMessageFormValues>,
+) {
   if (values.message.length === 0) return
-  emits('send-message', values.message)
+  emits('send-message', values.message, formActions)
 }
 </script>
 

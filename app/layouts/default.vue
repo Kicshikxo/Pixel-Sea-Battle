@@ -45,7 +45,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelAvatar from '~/components/pixel/PixelAvatar.vue'
 import PixelLocaleSwitch from '~/components/pixel/PixelLocaleSwitch.vue'
 import PixelShadow from '~/components/pixel/PixelShadow.vue'

@@ -6,7 +6,7 @@
   </PixelBorder>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelBorder from '~/components/pixel/PixelBorder.vue'
 
 const props = withDefaults(

@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
     color?: 'adaptive' | 'dark' | 'light' | 'red' | 'yellow' | 'green' | 'blue'

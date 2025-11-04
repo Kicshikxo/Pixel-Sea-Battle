@@ -11,7 +11,7 @@
   </Field>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelCheckbox from '~/components/pixel/PixelCheckbox.vue'
 
 import { Field } from 'vee-validate'

@@ -16,7 +16,7 @@
   </PixelBorder>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ShipOrientation, ShipType } from '@prisma/client'
 import PixelBorder from '~/components/pixel/PixelBorder.vue'
 

@@ -6,12 +6,7 @@
     v-slot="formContext"
     @submit="handleSubmit"
   >
-    <TransitionSwipe v-if="animatedTitle">
-      <div v-if="slots.title || title" class="px-form__title" :key="title">
-        <slot name="title">{{ title }}</slot>
-      </div>
-    </TransitionSwipe>
-    <div v-else-if="slots.title || title" class="px-form__title">
+    <div v-if="slots.title || title" class="px-form__title">
       <slot name="title">{{ title }}</slot>
     </div>
 
@@ -19,9 +14,7 @@
   </Form>
 </template>
 
-<script setup lang="ts" generic="T extends z.ZodSchema">
-import TransitionSwipe from '~/components/transitions/TransitionSwipe.vue'
-
+<script lang="ts" setup generic="T extends z.ZodSchema">
 import { toTypedSchema } from '@vee-validate/zod'
 import { Form, type FormActions, type FormContext } from 'vee-validate'
 import { z } from 'zod'
@@ -30,7 +23,6 @@ const props = withDefaults(
   defineProps<{
     validationSchema?: T
     title?: string
-    animatedTitle?: boolean
     fullWidth?: boolean
   }>(),
   {

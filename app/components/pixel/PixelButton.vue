@@ -21,6 +21,7 @@
         },
       ]"
       :name="name"
+      :form="form"
       :type="type"
       :disabled="loading || disabled"
     >
@@ -56,7 +57,7 @@
   </PixelBorder>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { NuxtLink } from '#components'
 
 import PixelBorder from '~/components/pixel/PixelBorder.vue'
@@ -68,6 +69,7 @@ const props = withDefaults(
     name?: string
     link?: boolean
     to?: string
+    form?: string
     type?: 'button' | 'submit'
     color?: 'dark' | 'light' | 'red' | 'yellow' | 'green' | 'blue'
     label?: string
@@ -83,6 +85,7 @@ const props = withDefaults(
     name: undefined,
     link: false,
     to: undefined,
+    form: undefined,
     type: 'button',
     color: 'blue',
     small: false,

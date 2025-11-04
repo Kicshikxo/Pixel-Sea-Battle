@@ -14,7 +14,7 @@
   </PixelBorder>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelBorder from '~/components/pixel/PixelBorder.vue'
 
 import { styles } from '~/utils/getAvatar'

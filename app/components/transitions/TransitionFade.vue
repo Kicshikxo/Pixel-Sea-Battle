@@ -7,7 +7,7 @@
   </Transition>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 const props = withDefaults(
   defineProps<{
     mode?: 'out-in' | 'in-out'

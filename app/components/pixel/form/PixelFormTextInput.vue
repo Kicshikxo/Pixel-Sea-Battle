@@ -30,7 +30,7 @@
   </Field>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelTextInput from '~/components/pixel/PixelTextInput.vue'
 
 import { Field } from 'vee-validate'

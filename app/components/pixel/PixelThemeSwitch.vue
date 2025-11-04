@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import TransitionSwipe from '~/components/transitions/TransitionSwipe.vue'
 
 const colorMode = useColorMode()

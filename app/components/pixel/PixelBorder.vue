@@ -21,7 +21,7 @@
   </PixelShadow>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelChamfer from '~/components/pixel/PixelChamfer.vue'
 import PixelShadow from '~/components/pixel/PixelShadow.vue'
 

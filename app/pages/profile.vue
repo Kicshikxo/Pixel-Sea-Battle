@@ -33,96 +33,17 @@
         <PixelContainer full-width>
           <TransitionExpand>
             <div v-if="userData.email">
-              <PixelForm
-                class="profile-page__email-form"
-                :validation-schema="changeEmailSchema"
-                full-width
+              <ChangeEmailForm
+                :user-data="userData"
+                :loading="loading.changeEmail"
+                :resend-loading="loading.resendVerificationEmail"
+                @resend-verification-email="handleResendVerificationEmail"
                 @submit="handleChangeEmail"
-              >
-                <template #title>
-                  <span>{{ $t('page.profile.email') }}</span>
-                  <span class="profile-page__email-form__status">
-                    <PixelBorder v-if="userData.emailVerifiedAt" color="green">
-                      <span class="profile-page__email-form__status-text">
-                        {{ $t('page.profile.emailVerified') }}
-                      </span>
-                    </PixelBorder>
-                    <PixelBorder v-else color="red">
-                      <span class="profile-page__email-form__status-text">
-                        {{ $t('page.profile.emailNotVerified') }}
-                      </span>
-                    </PixelBorder>
-                  </span>
-                </template>
-
-                <PixelFormTextInput
-                  name="newEmail"
-                  type="email"
-                  autocomplete="email"
-                  :placeholder="$t('page.profile.email')"
-                  :value="userData?.email"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:mail" />
-                  </template>
-                </PixelFormTextInput>
-
-                <div class="profile-page__email-form__buttons">
-                  <PixelButton
-                    v-if="!userData.emailVerifiedAt"
-                    :label="$t('page.profile.resendVerificationEmail')"
-                    :loading="loading.resendVerificationEmail"
-                    @click="handleResendVerificationEmail"
-                  >
-                    <template #append-icon>
-                      <icon name="pixelarticons:mail-arrow-right" />
-                    </template>
-                  </PixelButton>
-
-                  <PixelButton
-                    type="submit"
-                    :label="$t('page.profile.changeEmail')"
-                    :loading="loading.changeEmail"
-                  >
-                    <template #append-icon>
-                      <icon name="pixelarticons:mail" />
-                    </template>
-                  </PixelButton>
-                </div>
-              </PixelForm>
+              />
             </div>
 
             <div v-else>
-              <PixelForm
-                class="profile-page__email-form"
-                :title="$t('page.profile.setEmail')"
-                :validation-schema="setEmailSchema"
-                full-width
-                @submit="handleSetEmail"
-              >
-                <PixelFormTextInput
-                  name="newEmail"
-                  type="email"
-                  autocomplete="email"
-                  :placeholder="$t('page.profile.newEmail')"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:mail" />
-                  </template>
-                </PixelFormTextInput>
-
-                <div class="profile-page__email-form__buttons">
-                  <PixelButton
-                    type="submit"
-                    :label="$t('page.profile.setEmail')"
-                    :loading="loading.setEmail"
-                  >
-                    <template #append-icon>
-                      <icon name="pixelarticons:mail" />
-                    </template>
-                  </PixelButton>
-                </div>
-              </PixelForm>
+              <SetEmailForm :loading="loading.setEmail" @submit="handleSetEmail" />
             </div>
           </TransitionExpand>
         </PixelContainer>
@@ -130,107 +51,14 @@
         <PixelContainer full-width>
           <TransitionExpand>
             <div v-if="userData.password">
-              <PixelForm
-                class="profile-page__password-form"
-                :title="$t('page.profile.changePassword')"
-                :validation-schema="changePasswordSchema"
-                full-width
+              <ChangePasswordForm
+                :loading="loading.changePassword"
                 @submit="handleChangePassword"
-              >
-                <input name="username" autocomplete="username" style="display: none" />
-                <PixelFormTextInput
-                  name="currentPassword"
-                  type="password"
-                  autocomplete="current-password"
-                  :label="$t('page.profile.currentPassword')"
-                  :placeholder="$t('page.profile.currentPassword')"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelFormTextInput>
-
-                <PixelFormTextInput
-                  name="newPassword"
-                  type="password"
-                  autocomplete="new-password"
-                  :label="$t('page.profile.newPassword')"
-                  :placeholder="$t('page.profile.newPassword')"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelFormTextInput>
-
-                <PixelFormTextInput
-                  name="repeatNewPassword"
-                  type="password"
-                  autocomplete="new-password"
-                  :placeholder="$t('page.profile.repeatNewPassword')"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelFormTextInput>
-
-                <div class="profile-page__password-form__buttons">
-                  <PixelButton
-                    type="submit"
-                    :loading="loading.changePassword"
-                    :label="$t('page.profile.changePassword')"
-                  >
-                    <template #append-icon>
-                      <icon name="pixelarticons:lock" />
-                    </template>
-                  </PixelButton>
-                </div>
-              </PixelForm>
+              />
             </div>
 
             <div v-else>
-              <PixelForm
-                class="profile-page__password-form"
-                :title="$t('page.profile.setPassword')"
-                :validation-schema="setPasswordSchema"
-                full-width
-                @submit="handleSetPassword"
-              >
-                <input name="username" autocomplete="username" style="display: none" />
-                <PixelFormTextInput
-                  name="newPassword"
-                  type="password"
-                  autocomplete="new-password"
-                  :label="$t('page.profile.newPassword')"
-                  :placeholder="$t('page.profile.newPassword')"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelFormTextInput>
-
-                <PixelFormTextInput
-                  name="repeatNewPassword"
-                  type="password"
-                  autocomplete="new-password"
-                  :placeholder="$t('page.profile.repeatNewPassword')"
-                >
-                  <template #prepend-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelFormTextInput>
-
-                <div class="profile-page__password-form__buttons">
-                  <PixelButton
-                    type="submit"
-                    :label="$t('page.profile.setPassword')"
-                    :loading="loading.setPassword"
-                  >
-                    <template #append-icon>
-                      <icon name="pixelarticons:lock" />
-                    </template>
-                  </PixelButton>
-                </div>
-              </PixelForm>
+              <SetPasswordForm :loading="loading.setPassword" @submit="handleSetPassword" />
             </div>
           </TransitionExpand>
         </PixelContainer>
@@ -266,11 +94,11 @@
   </TransitionFade>
 </template>
 
-<script setup lang="ts">
-import PixelForm from '~/components/pixel/form/PixelForm.vue'
-import PixelFormTextInput from '~/components/pixel/form/PixelFormTextInput.vue'
+<script lang="ts" setup>
+import ChangeEmailForm, {
+  type ChangeEmailFormValues,
+} from '~/components/pages/profile/ChangeEmailForm.vue'
 import PixelAvatar from '~/components/pixel/PixelAvatar.vue'
-import PixelBorder from '~/components/pixel/PixelBorder.vue'
 import PixelButton from '~/components/pixel/PixelButton.vue'
 import PixelContainer from '~/components/pixel/PixelContainer.vue'
 import PixelModal from '~/components/pixel/PixelModal.vue'
@@ -279,7 +107,13 @@ import TransitionFade from '~/components/transitions/TransitionFade.vue'
 
 import { UserType } from '@prisma/client'
 import { type FormActions } from 'vee-validate'
-import { z } from 'zod'
+import ChangePasswordForm, {
+  type ChangePasswordFormValues,
+} from '~/components/pages/profile/ChangePasswordForm.vue'
+import SetEmailForm, { type SetEmailFormValues } from '~/components/pages/profile/SetEmailForm.vue'
+import SetPasswordForm, {
+  type SetPasswordFormValues,
+} from '~/components/pages/profile/SetPasswordForm.vue'
 
 const { t } = useI18n()
 const trpc = useTRPC()
@@ -298,75 +132,6 @@ const loading = reactive({
 })
 
 const showConfirmGuestSignOutModal = ref(false)
-
-const changeEmailSchema = computed(() =>
-  z.object({
-    newEmail: z
-      .string()
-      .min(1, t('validation.required'))
-      .email(t('validation.invalidEmail'))
-      .default(''),
-  }),
-)
-type ChangeEmailFormValues = z.infer<typeof changeEmailSchema.value>
-
-const setEmailSchema = computed(() =>
-  z.object({
-    newEmail: z
-      .string()
-      .min(1, t('validation.required'))
-      .email(t('validation.invalidEmail'))
-      .default(''),
-  }),
-)
-type SetEmailFormValues = z.infer<typeof setEmailSchema.value>
-
-const changePasswordSchema = computed(() =>
-  z
-    .object({
-      currentPassword: z
-        .string()
-        .min(1, t('validation.required'))
-        .max(100, { message: t('validation.tooManyCharacters') })
-        .default(''),
-      newPassword: z
-        .string()
-        .min(1, t('validation.required'))
-        .max(100, { message: t('validation.tooManyCharacters') })
-        .default(''),
-      repeatNewPassword: z
-        .string()
-        .min(1, t('validation.required'))
-        .max(100, { message: t('validation.tooManyCharacters') })
-        .default(''),
-    })
-    .refine((data) => data.newPassword === data.repeatNewPassword, {
-      message: t('validation.passwordsDoNotMatch'),
-      path: ['repeatNewPassword'],
-    }),
-)
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema.value>
-
-const setPasswordSchema = computed(() =>
-  z
-    .object({
-      newPassword: z
-        .string()
-        .min(1, t('validation.required'))
-        .max(100, { message: t('validation.tooManyCharacters') })
-        .default(''),
-      repeatNewPassword: z
-        .string()
-        .min(1, t('validation.required'))
-        .max(100, { message: t('validation.tooManyCharacters') })
-        .default(''),
-    })
-    .refine((data) => data.newPassword === data.repeatNewPassword, {
-      message: t('validation.passwordsDoNotMatch'),
-      path: ['repeatNewPassword'],
-    }),
-)
-type SetPasswordFormValues = z.infer<typeof setPasswordSchema.value>
 
 async function handleResendVerificationEmail() {
   loading.resendVerificationEmail = true
@@ -498,36 +263,6 @@ async function handleSignout(force = false) {
 
     @include on-breakpoint(sm) {
       flex-direction: column;
-    }
-  }
-
-  &__email-form {
-    &__status {
-      font-size: 14px;
-      margin-left: 8px;
-
-      &-text {
-        color: var(--px-color-white);
-        padding: 0 8px;
-      }
-    }
-
-    &__buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: end;
-      gap: 8px;
-      width: 100%;
-    }
-  }
-
-  &__password-form {
-    &__buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: end;
-      gap: 8px;
-      width: 100%;
     }
   }
 }

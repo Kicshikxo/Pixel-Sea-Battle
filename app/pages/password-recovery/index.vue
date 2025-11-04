@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import PixelForm from '~/components/pixel/form/PixelForm.vue'
 import PixelFormTextInput from '~/components/pixel/form/PixelFormTextInput.vue'
 import PixelButton from '~/components/pixel/PixelButton.vue'
