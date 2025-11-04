@@ -105,6 +105,13 @@
 import ChangeEmailForm, {
   type ChangeEmailFormValues,
 } from '~/components/pages/profile/ChangeEmailForm.vue'
+import ChangePasswordForm, {
+  type ChangePasswordFormValues,
+} from '~/components/pages/profile/ChangePasswordForm.vue'
+import SetEmailForm, { type SetEmailFormValues } from '~/components/pages/profile/SetEmailForm.vue'
+import SetPasswordForm, {
+  type SetPasswordFormValues,
+} from '~/components/pages/profile/SetPasswordForm.vue'
 import PixelAvatar from '~/components/pixel/PixelAvatar.vue'
 import PixelButton from '~/components/pixel/PixelButton.vue'
 import PixelContainer from '~/components/pixel/PixelContainer.vue'
@@ -113,13 +120,6 @@ import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
 
 import { UserType } from '@prisma/client'
 import { type FormActions } from 'vee-validate'
-import ChangePasswordForm, {
-  type ChangePasswordFormValues,
-} from '~/components/pages/profile/ChangePasswordForm.vue'
-import SetEmailForm, { type SetEmailFormValues } from '~/components/pages/profile/SetEmailForm.vue'
-import SetPasswordForm, {
-  type SetPasswordFormValues,
-} from '~/components/pages/profile/SetPasswordForm.vue'
 
 const { t } = useI18n()
 const trpc = useTRPC()

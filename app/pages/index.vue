@@ -90,6 +90,7 @@
 </template>
 
 <script lang="ts" setup>
+import RoomsList from '~/components/pages/index/RoomsList.vue'
 import PixelForm from '~/components/pixel/form/PixelForm.vue'
 import PixelFormCheckbox from '~/components/pixel/form/PixelFormCheckbox.vue'
 import PixelFormTextInput from '~/components/pixel/form/PixelFormTextInput.vue'
@@ -98,12 +99,11 @@ import PixelContainer from '~/components/pixel/PixelContainer.vue'
 import PixelModal from '~/components/pixel/PixelModal.vue'
 import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
 
-import RoomsList from '~/components/pages/index/RoomsList.vue'
+import useRoomsStore from '~/store/rooms'
 
 import { RoomType } from '@prisma/client'
 import type { FormContext } from 'vee-validate'
 import { z } from 'zod'
-import useRoomsStore from '~/store/rooms'
 
 const { t } = useI18n()
 const toast = useToast()
