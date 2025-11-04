@@ -9,8 +9,8 @@
         </PixelButton>
         <PixelButton
           :label="$t('page.index.quickJoin')"
-          :loading="quickMatchLoading"
-          :disabled="joinRoomLoading"
+          :loading="loading.quickMatch"
+          :disabled="loading.joinRoom"
           @click="handleQuickJoin"
         >
           <template #prepend-icon>
@@ -25,21 +25,21 @@
             v-if="roomsStore.activeRooms.length"
             :title="$t('page.index.room.listActive')"
             :rooms="roomsStore.activeRooms"
-            :rooms-loading="roomsLoading"
+            :rooms-loading="loading.rooms"
             :loading-room-id="joinRoomId"
-            :join-room-loading="joinRoomLoading"
+            :join-room-loading="loading.joinRoom"
             @join-room="handleJoinRoom"
           />
         </TransitionExpand>
 
         <TransitionExpand>
           <RoomsList
-            v-if="roomsStore.publicRooms.length || roomsLoading"
+            v-if="roomsStore.publicRooms.length || loading.rooms"
             :title="$t('page.index.room.listPublic')"
             :rooms="roomsStore.publicRooms ?? []"
-            :rooms-loading="roomsLoading"
+            :rooms-loading="loading.rooms"
             :loading-room-id="joinRoomId"
-            :join-room-loading="joinRoomLoading"
+            :join-room-loading="loading.joinRoom"
             @join-room="handleJoinRoom"
           />
         </TransitionExpand>
@@ -72,7 +72,7 @@
           <PixelButton
             type="submit"
             :label="$t('page.index.room.create')"
-            :loading="createRoomLoading"
+            :loading="loading.createRoom"
             full-width
           >
             <template #append-icon>
@@ -111,17 +111,20 @@ const roomsStore = useRoomsStore()
 const createRoomForm = ref<FormContext>()
 const showCreateRoomModal = ref(false)
 
-const createRoomLoading = ref(false)
-const roomsLoading = ref(true)
-const joinRoomLoading = ref(false)
+const loading = reactive({
+  createRoom: false,
+  rooms: true,
+  joinRoom: false,
+  quickMatch: false,
+})
+
 const joinRoomId = ref<string | null>(null)
-const quickMatchLoading = ref(false)
 
 onMounted(async () => {
   try {
     await roomsStore.getRooms()
   } finally {
-    roomsLoading.value = false
+    loading.rooms = false
   }
 })
 
@@ -151,7 +154,7 @@ const createRoomSchema = computed(() =>
 type CreateRoomFormValues = z.infer<typeof createRoomSchema.value>
 
 async function handleCreateRoom(values: CreateRoomFormValues) {
-  createRoomLoading.value = true
+  loading.createRoom = true
   try {
     const room = await trpc.room.create.mutate({
       name: values.name,
@@ -162,32 +165,32 @@ async function handleCreateRoom(values: CreateRoomFormValues) {
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
-    createRoomLoading.value = false
+    loading.createRoom = false
   }
 }
 
 async function handleJoinRoom(id: string) {
-  joinRoomLoading.value = true
+  loading.joinRoom = true
   joinRoomId.value = id
   try {
     await router.push({ name: 'room-id', params: { id } })
   } finally {
-    joinRoomLoading.value = false
+    loading.joinRoom = false
     joinRoomId.value = null
   }
 }
 
 async function handleQuickJoin() {
-  joinRoomLoading.value = true
-  quickMatchLoading.value = true
+  loading.joinRoom = true
+  loading.quickMatch = true
   try {
     const room = await trpc.room.quickJoin.mutate()
     await router.push({ name: 'room-id', params: { id: room.id } })
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
-    joinRoomLoading.value = false
-    quickMatchLoading.value = false
+    loading.joinRoom = false
+    loading.quickMatch = false
   }
 }
 </script>

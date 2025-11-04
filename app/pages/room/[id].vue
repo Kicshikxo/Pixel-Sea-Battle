@@ -20,8 +20,8 @@
         ref="roomMessages"
         :messages="roomStore.room?.messages"
         :show-typing-indicator="chatStore.otherPlayerTyping"
-        :messages-loading="messagesLoading"
-        :send-loading="sendMessageLoading"
+        :messages-loading="loading.messages"
+        :send-loading="loading.sendMessage"
         @send-message="handleSendMessage"
       />
     </PixelContainer>
@@ -36,14 +36,14 @@
           <PixelButton
             :label="$t('page.room.cancel')"
             full-width
-            :disabled="roomLeaveLoading"
+            :disabled="loading.roomLeave"
             @click="showRoomLeaveModal = false"
           />
           <PixelButton
             :label="$t('page.room.leave')"
             color="red"
             full-width
-            :loading="roomLeaveLoading"
+            :loading="loading.roomLeave"
             @click="handleLeaveRoom"
           />
         </div>
@@ -88,12 +88,14 @@ const roomStore = useRoomStore()
 const chatStore = useChatStore()
 
 const roomMessages = ref<InstanceType<typeof RoomMessages>>()
-const messagesLoading = ref(true)
-const sendMessageLoading = ref(false)
 
+const loading = reactive({
+  messages: true,
+  sendMessage: false,
+  roomLeave: false,
+})
 const showRoomLeaveModal = ref(false)
 const roomLeaveLocation = ref<RouteLocation>()
-const roomLeaveLoading = ref(false)
 
 const roomId = computed(() => route.params.id as string)
 
@@ -108,7 +110,7 @@ onMounted(async () => {
   try {
     await roomStore.connectRoom(roomId.value)
   } finally {
-    messagesLoading.value = false
+    loading.messages = false
   }
 })
 onUnmounted(async () => {
@@ -130,7 +132,7 @@ onBeforeRouteLeave(async (to) => {
 })
 
 async function handleLeaveRoom() {
-  roomLeaveLoading.value = true
+  loading.roomLeave = true
 
   try {
     await roomStore.disconnectRoom(roomId.value)
@@ -143,7 +145,7 @@ async function handleLeaveRoom() {
       await router.push({ name: 'index' })
     }
 
-    roomLeaveLoading.value = false
+    loading.roomLeave = false
     showRoomLeaveModal.value = false
   }
 }
@@ -160,13 +162,13 @@ watch(
 )
 
 async function handleSendMessage(messageText: string) {
-  sendMessageLoading.value = true
+  loading.sendMessage = true
   try {
     await chatStore.stopTyping(roomId.value)
     await chatStore.sendMessage(messageText)
   } finally {
     roomMessages.value?.formContext()?.resetForm()
-    sendMessageLoading.value = false
+    loading.sendMessage = false
   }
 }
 </script>

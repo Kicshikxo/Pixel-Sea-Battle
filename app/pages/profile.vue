@@ -18,7 +18,7 @@
           <div class="profile-page__profile-actions">
             <PixelButton
               :label="$t('page.profile.signOut')"
-              :loading="signOutLoading"
+              :loading="loading.signOut"
               @click="handleSignout(false)"
             >
               <template #append-icon>
@@ -71,7 +71,7 @@
                   <PixelButton
                     v-if="!userData.emailVerifiedAt"
                     :label="$t('page.profile.resendVerificationEmail')"
-                    :loading="resendVerificationEmailLoading"
+                    :loading="loading.resendVerificationEmail"
                     @click="handleResendVerificationEmail"
                   >
                     <template #append-icon>
@@ -82,7 +82,7 @@
                   <PixelButton
                     type="submit"
                     :label="$t('page.profile.changeEmail')"
-                    :loading="changeEmailLoading"
+                    :loading="loading.changeEmail"
                   >
                     <template #append-icon>
                       <icon name="pixelarticons:mail" />
@@ -115,7 +115,7 @@
                   <PixelButton
                     type="submit"
                     :label="$t('page.profile.setEmail')"
-                    :loading="setEmailLoading"
+                    :loading="loading.setEmail"
                   >
                     <template #append-icon>
                       <icon name="pixelarticons:mail" />
@@ -176,7 +176,7 @@
                 <div class="profile-page__password-form__buttons">
                   <PixelButton
                     type="submit"
-                    :loading="changePasswordLoading"
+                    :loading="loading.changePassword"
                     :label="$t('page.profile.changePassword')"
                   >
                     <template #append-icon>
@@ -223,7 +223,7 @@
                   <PixelButton
                     type="submit"
                     :label="$t('page.profile.setPassword')"
-                    :loading="setPasswordLoading"
+                    :loading="loading.setPassword"
                   >
                     <template #append-icon>
                       <icon name="pixelarticons:lock" />
@@ -249,14 +249,14 @@
             <PixelButton
               :label="$t('page.profile.cancel')"
               full-width
-              :disabled="signOutLoading"
+              :disabled="loading.signOut"
               @click="showConfirmGuestSignOutModal = false"
             />
             <PixelButton
               :label="$t('page.profile.leave')"
               color="red"
               full-width
-              :loading="signOutLoading"
+              :loading="loading.signOut"
               @click="handleSignout(true)"
             />
           </div>
@@ -288,12 +288,15 @@ const { signOut } = useAuth()
 
 const { data: userData, refresh: refreshUserData } = trpc.auth.info.useQuery()
 
-const resendVerificationEmailLoading = ref(false)
-const changeEmailLoading = ref(false)
-const setEmailLoading = ref(false)
-const changePasswordLoading = ref(false)
-const setPasswordLoading = ref(false)
-const signOutLoading = ref(false)
+const loading = reactive({
+  resendVerificationEmail: false,
+  changeEmail: false,
+  setEmail: false,
+  changePassword: false,
+  setPassword: false,
+  signOut: false,
+})
+
 const showConfirmGuestSignOutModal = ref(false)
 
 const changeEmailSchema = computed(() =>
@@ -366,7 +369,7 @@ const setPasswordSchema = computed(() =>
 type SetPasswordFormValues = z.infer<typeof setPasswordSchema.value>
 
 async function handleResendVerificationEmail() {
-  resendVerificationEmailLoading.value = true
+  loading.resendVerificationEmail = true
 
   try {
     await trpc.user.resendEmailConfirmation.mutate()
@@ -374,7 +377,7 @@ async function handleResendVerificationEmail() {
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
-    resendVerificationEmailLoading.value = false
+    loading.resendVerificationEmail = false
   }
 }
 
@@ -389,7 +392,7 @@ async function handleSetEmail(
   values: SetEmailFormValues,
   formActions: FormActions<SetEmailFormValues>,
 ) {
-  setEmailLoading.value = true
+  loading.setEmail = true
 
   try {
     await trpc.user.changeEmail.mutate({ email: values.newEmail })
@@ -398,7 +401,7 @@ async function handleSetEmail(
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
-    setEmailLoading.value = false
+    loading.setEmail = false
   }
 }
 
@@ -406,7 +409,7 @@ async function handleChangePassword(
   values: ChangePasswordFormValues,
   formActions: FormActions<ChangePasswordFormValues>,
 ) {
-  changePasswordLoading.value = true
+  loading.changePassword = true
 
   try {
     await trpc.user.changePassword.mutate({
@@ -419,7 +422,7 @@ async function handleChangePassword(
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
-    changePasswordLoading.value = false
+    loading.changePassword = false
   }
 }
 
@@ -427,7 +430,7 @@ async function handleSetPassword(
   values: SetPasswordFormValues,
   formActions: FormActions<SetPasswordFormValues>,
 ) {
-  setPasswordLoading.value = true
+  loading.setPassword = true
 
   try {
     await trpc.user.changePassword.mutate({ newPassword: values.newPassword })
@@ -437,7 +440,7 @@ async function handleSetPassword(
   } catch (error: any) {
     toast.error(t(error.message))
   } finally {
-    setPasswordLoading.value = false
+    loading.setPassword = false
   }
 }
 
@@ -447,10 +450,10 @@ async function handleSignout(force = false) {
     return
   }
 
-  signOutLoading.value = true
+  loading.signOut = true
   const { error } = await signOut({ redirectTo: '/auth' })
   if (error) toast.error(error)
-  signOutLoading.value = false
+  loading.signOut = false
 }
 </script>
 
