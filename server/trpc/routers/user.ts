@@ -3,10 +3,22 @@ import { TRPCError } from '@trpc/server'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { prisma } from '~~/prisma/client'
+import { sendEmailVerification } from '~~/server/email'
 import { trpcRouter } from '~~/server/trpc'
 import { trpcAuthProcedure } from '~~/server/trpc/middleware/auth'
 
 export const userRouter = trpcRouter({
+  resendEmailConfirmation: trpcAuthProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.user.email) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'error.user.unableToResendEmail',
+      })
+    }
+
+    await sendEmailVerification(ctx.event, ctx.user.email)
+  }),
+
   changeEmail: trpcAuthProcedure
     .input(
       z.object({

@@ -67,16 +67,28 @@
                   </template>
                 </PixelFormTextInput>
 
-                <PixelButton
-                  type="submit"
-                  :label="$t('page.profile.changeEmail')"
-                  :loading="changeEmailLoading"
-                  class="profile-page__email-form__button"
-                >
-                  <template #append-icon>
-                    <icon name="pixelarticons:mail" />
-                  </template>
-                </PixelButton>
+                <div class="profile-page__email-form__buttons">
+                  <PixelButton
+                    v-if="!userData.emailVerifiedAt"
+                    :label="$t('page.profile.resendVerificationEmail')"
+                    :loading="resendVerificationEmailLoading"
+                    @click="handleResendVerificationEmail"
+                  >
+                    <template #append-icon>
+                      <icon name="pixelarticons:mail-arrow-right" />
+                    </template>
+                  </PixelButton>
+
+                  <PixelButton
+                    type="submit"
+                    :label="$t('page.profile.changeEmail')"
+                    :loading="changeEmailLoading"
+                  >
+                    <template #append-icon>
+                      <icon name="pixelarticons:mail" />
+                    </template>
+                  </PixelButton>
+                </div>
               </PixelForm>
             </div>
 
@@ -99,16 +111,17 @@
                   </template>
                 </PixelFormTextInput>
 
-                <PixelButton
-                  type="submit"
-                  :label="$t('page.profile.setEmail')"
-                  :loading="setEmailLoading"
-                  class="profile-page__email-form__button"
-                >
-                  <template #append-icon>
-                    <icon name="pixelarticons:mail" />
-                  </template>
-                </PixelButton>
+                <div class="profile-page__email-form__buttons">
+                  <PixelButton
+                    type="submit"
+                    :label="$t('page.profile.setEmail')"
+                    :loading="setEmailLoading"
+                  >
+                    <template #append-icon>
+                      <icon name="pixelarticons:mail" />
+                    </template>
+                  </PixelButton>
+                </div>
               </PixelForm>
             </div>
           </TransitionExpand>
@@ -160,16 +173,17 @@
                   </template>
                 </PixelFormTextInput>
 
-                <PixelButton
-                  type="submit"
-                  :loading="changePasswordLoading"
-                  :label="$t('page.profile.changePassword')"
-                  class="profile-page__password-form__button"
-                >
-                  <template #append-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelButton>
+                <div class="profile-page__password-form__buttons">
+                  <PixelButton
+                    type="submit"
+                    :loading="changePasswordLoading"
+                    :label="$t('page.profile.changePassword')"
+                  >
+                    <template #append-icon>
+                      <icon name="pixelarticons:lock" />
+                    </template>
+                  </PixelButton>
+                </div>
               </PixelForm>
             </div>
 
@@ -205,16 +219,17 @@
                   </template>
                 </PixelFormTextInput>
 
-                <PixelButton
-                  type="submit"
-                  :label="$t('page.profile.setPassword')"
-                  :loading="setPasswordLoading"
-                  class="profile-page__password-form__button"
-                >
-                  <template #append-icon>
-                    <icon name="pixelarticons:lock" />
-                  </template>
-                </PixelButton>
+                <div class="profile-page__password-form__buttons">
+                  <PixelButton
+                    type="submit"
+                    :label="$t('page.profile.setPassword')"
+                    :loading="setPasswordLoading"
+                  >
+                    <template #append-icon>
+                      <icon name="pixelarticons:lock" />
+                    </template>
+                  </PixelButton>
+                </div>
               </PixelForm>
             </div>
           </TransitionExpand>
@@ -269,10 +284,11 @@ import { z } from 'zod'
 const { t } = useI18n()
 const trpc = useTRPC()
 const toast = useToast()
-const { session, signOut } = useAuth()
+const { signOut } = useAuth()
 
 const { data: userData, refresh: refreshUserData } = trpc.auth.info.useQuery()
 
+const resendVerificationEmailLoading = ref(false)
 const changeEmailLoading = ref(false)
 const setEmailLoading = ref(false)
 const changePasswordLoading = ref(false)
@@ -348,6 +364,19 @@ const setPasswordSchema = computed(() =>
     }),
 )
 type SetPasswordFormValues = z.infer<typeof setPasswordSchema.value>
+
+async function handleResendVerificationEmail() {
+  resendVerificationEmailLoading.value = true
+
+  try {
+    await trpc.user.resendEmailConfirmation.mutate()
+    toast.success(t('page.profile.verificationEmailResent'))
+  } catch (error: any) {
+    toast.error(t(error.message))
+  } finally {
+    resendVerificationEmailLoading.value = false
+  }
+}
 
 async function handleChangeEmail(
   values: ChangeEmailFormValues,
@@ -480,14 +509,22 @@ async function handleSignout(force = false) {
       }
     }
 
-    &__button {
-      margin-left: auto;
+    &__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: 8px;
+      width: 100%;
     }
   }
 
   &__password-form {
-    &__button {
-      margin-left: auto;
+    &__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: 8px;
+      width: 100%;
     }
   }
 }

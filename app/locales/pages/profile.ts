@@ -27,6 +27,10 @@ export default {
       ru: 'Гость',
     },
   },
+  registerDate: {
+    en: 'Register date',
+    ru: 'Дата регистрации',
+  },
   emailVerified: {
     en: 'Verified',
     ru: 'Подтверждена',
@@ -35,9 +39,13 @@ export default {
     en: 'Not verified',
     ru: 'Не подтверждена',
   },
-  registerDate: {
-    en: 'Register date',
-    ru: 'Дата регистрации',
+  resendVerificationEmail: {
+    en: 'Verify',
+    ru: 'Подтвердить',
+  },
+  verificationEmailResent: {
+    en: 'Verification email resent',
+    ru: 'Подтверждение почты отправлено',
   },
   setEmail: {
     en: 'Set email',
