@@ -5,7 +5,7 @@
         <PixelContainer full-width>
           <TransitionExpand>
             <div v-if="roomStore.room.status === RoomStatus.PENDING">
-              <RoomPlayerBoardEdit @ready="" />
+              <RoomPlayerBoardEdit @ready="handleReady" />
             </div>
             <div v-else>
               <RoomPlayerBoards />
@@ -54,11 +54,13 @@
 
 <script setup lang="ts">
 import RoomMessages from '~/components/pages/room/RoomMessages.vue'
+import RoomPlayerBoardEdit, {
+  type BoardShip,
+} from '~/components/pages/room/RoomPlayerBoardEdit.vue'
 import RoomPlayerBoards from '~/components/pages/room/RoomPlayerBoards.vue'
 import PixelButton from '~/components/pixel/PixelButton.vue'
 import PixelContainer from '~/components/pixel/PixelContainer.vue'
 import PixelModal from '~/components/pixel/PixelModal.vue'
-import RoomPlayerBoardEdit from '~/components/pages/room/RoomPlayerBoardEdit.vue'
 import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
 
 import useChatStore from '~/store/chat'
@@ -170,6 +172,10 @@ async function handleSendMessage(messageText: string) {
     roomMessages.value?.formContext()?.resetForm()
     loading.sendMessage = false
   }
+}
+
+async function handleReady(ships: BoardShip[]) {
+  console.log(ships)
 }
 </script>
 

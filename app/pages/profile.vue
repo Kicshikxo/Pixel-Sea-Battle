@@ -1,97 +1,103 @@
 <template>
-  <TransitionFade>
-    <div v-if="userData" class="profile-page">
-      <PixelContainer full-width>
-        <div class="profile-page__profile">
-          <PixelAvatar :seed="userData.id" :title="userData.username" large />
-          <div class="profile-page__profile-info">
-            <span>{{ $t('page.profile.username') }}: {{ userData?.username }}</span>
-            <span>
-              {{ $t('page.profile.registerDate') }}:
-              {{ new Date(userData.createdAt).toLocaleDateString() }}
-            </span>
-            <span>
-              {{ $t('page.profile.userType.label') }}:
-              {{ $t(`page.profile.userType.${userData.type}`) }}
-            </span>
-          </div>
-          <div class="profile-page__profile-actions">
-            <PixelButton
-              :label="$t('page.profile.signOut')"
-              :loading="loading.signOut"
-              @click="handleSignout(false)"
-            >
-              <template #append-icon>
-                <icon name="pixelarticons:logout" />
-              </template>
-            </PixelButton>
-          </div>
-        </div>
-      </PixelContainer>
-
-      <div class="profile-page__forms">
+  <div class="profile-page">
+    <TransitionExpand>
+      <div v-if="userData" class="profile-page__wrapper">
         <PixelContainer full-width>
-          <TransitionExpand>
-            <div v-if="userData.email">
-              <ChangeEmailForm
-                :user-data="userData"
-                :loading="loading.changeEmail"
-                :resend-loading="loading.resendVerificationEmail"
-                @resend-verification-email="handleResendVerificationEmail"
-                @submit="handleChangeEmail"
-              />
+          <div class="profile-page__profile">
+            <PixelAvatar :seed="userData.id" :title="userData.username" large />
+            <div class="profile-page__profile-info">
+              <span>{{ $t('page.profile.username') }}: {{ userData?.username }}</span>
+              <span>
+                {{ $t('page.profile.registerDate') }}:
+                {{ new Date(userData.createdAt).toLocaleDateString() }}
+              </span>
+              <span>
+                {{ $t('page.profile.userType.label') }}:
+                {{ $t(`page.profile.userType.${userData.type}`) }}
+              </span>
             </div>
-
-            <div v-else>
-              <SetEmailForm :loading="loading.setEmail" @submit="handleSetEmail" />
+            <div class="profile-page__profile-actions">
+              <PixelButton
+                :label="$t('page.profile.signOut')"
+                :loading="loading.signOut"
+                @click="handleSignout(false)"
+              >
+                <template #append-icon>
+                  <icon name="pixelarticons:logout" />
+                </template>
+              </PixelButton>
             </div>
-          </TransitionExpand>
-        </PixelContainer>
-
-        <PixelContainer full-width>
-          <TransitionExpand>
-            <div v-if="userData.password">
-              <ChangePasswordForm
-                :loading="loading.changePassword"
-                @submit="handleChangePassword"
-              />
-            </div>
-
-            <div v-else>
-              <SetPasswordForm :loading="loading.setPassword" @submit="handleSetPassword" />
-            </div>
-          </TransitionExpand>
+          </div>
         </PixelContainer>
       </div>
+    </TransitionExpand>
 
-      <PixelModal
-        v-model:show="showConfirmGuestSignOutModal"
-        :title="$t('page.profile.confirmLeave')"
-      >
-        <div class="confirm-guest-sign-out-modal">
-          <span>
-            {{ $t('page.profile.confirmGuestSignOut') }}
-          </span>
+    <TransitionExpand>
+      <div v-if="userData" class="profile-page__wrapper">
+        <div class="profile-page__forms">
+          <PixelContainer full-width>
+            <TransitionExpand>
+              <div v-if="userData.email">
+                <ChangeEmailForm
+                  :user-data="userData"
+                  :loading="loading.changeEmail"
+                  :resend-loading="loading.resendVerificationEmail"
+                  @resend-verification-email="handleResendVerificationEmail"
+                  @submit="handleChangeEmail"
+                />
+              </div>
 
-          <div class="confirm-guest-sign-out-modal__actions">
-            <PixelButton
-              :label="$t('page.profile.cancel')"
-              full-width
-              :disabled="loading.signOut"
-              @click="showConfirmGuestSignOutModal = false"
-            />
-            <PixelButton
-              :label="$t('page.profile.leave')"
-              color="red"
-              full-width
-              :loading="loading.signOut"
-              @click="handleSignout(true)"
-            />
-          </div>
+              <div v-else>
+                <SetEmailForm :loading="loading.setEmail" @submit="handleSetEmail" />
+              </div>
+            </TransitionExpand>
+          </PixelContainer>
+
+          <PixelContainer full-width>
+            <TransitionExpand>
+              <div v-if="userData.password">
+                <ChangePasswordForm
+                  :loading="loading.changePassword"
+                  @submit="handleChangePassword"
+                />
+              </div>
+
+              <div v-else>
+                <SetPasswordForm :loading="loading.setPassword" @submit="handleSetPassword" />
+              </div>
+            </TransitionExpand>
+          </PixelContainer>
         </div>
-      </PixelModal>
-    </div>
-  </TransitionFade>
+      </div>
+    </TransitionExpand>
+
+    <PixelModal
+      v-model:show="showConfirmGuestSignOutModal"
+      :title="$t('page.profile.confirmLeave')"
+    >
+      <div class="confirm-guest-sign-out-modal">
+        <span>
+          {{ $t('page.profile.confirmGuestSignOut') }}
+        </span>
+
+        <div class="confirm-guest-sign-out-modal__actions">
+          <PixelButton
+            :label="$t('page.profile.cancel')"
+            full-width
+            :disabled="loading.signOut"
+            @click="showConfirmGuestSignOutModal = false"
+          />
+          <PixelButton
+            :label="$t('page.profile.leave')"
+            color="red"
+            full-width
+            :loading="loading.signOut"
+            @click="handleSignout(true)"
+          />
+        </div>
+      </div>
+    </PixelModal>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -103,7 +109,6 @@ import PixelButton from '~/components/pixel/PixelButton.vue'
 import PixelContainer from '~/components/pixel/PixelContainer.vue'
 import PixelModal from '~/components/pixel/PixelModal.vue'
 import TransitionExpand from '~/components/transitions/TransitionExpand.vue'
-import TransitionFade from '~/components/transitions/TransitionFade.vue'
 
 import { UserType } from '@prisma/client'
 import { type FormActions } from 'vee-validate'
@@ -150,7 +155,17 @@ async function handleChangeEmail(
   values: ChangeEmailFormValues,
   formActions: FormActions<ChangeEmailFormValues>,
 ) {
-  console.log('handleChangeEmail', values)
+  loading.changeEmail = true
+
+  try {
+    await trpc.user.changeEmail.mutate({ email: values.newEmail })
+    await refreshUserData()
+    toast.success(t('page.profile.emailChanged'))
+  } catch (error: any) {
+    toast.error(t(error.message))
+  } finally {
+    loading.changeEmail = false
+  }
 }
 
 async function handleSetEmail(
@@ -231,6 +246,10 @@ async function handleSignout(force = false) {
   gap: 16px;
   padding: 16px;
   max-width: 1200px;
+
+  &__wrapper {
+    width: 100%;
+  }
 
   &__profile {
     display: flex;

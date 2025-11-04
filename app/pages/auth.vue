@@ -58,11 +58,11 @@ import type { CredentialResponse } from 'vue3-google-signin'
 
 definePageMeta({
   auth: false,
-  middleware: () => {
+  middleware: (to) => {
     const { session } = useAuth()
 
     if (session.status.value === 'authenticated') {
-      return navigateTo({ name: 'index' })
+      return navigateTo((to.query.redirectTo as string) ?? { name: 'index' })
     }
   },
 })

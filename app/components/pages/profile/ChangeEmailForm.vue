@@ -86,13 +86,18 @@ const emits = defineEmits<{
 }>()
 
 const changeEmailSchema = computed(() =>
-  z.object({
-    newEmail: z
-      .string()
-      .min(1, t('validation.required'))
-      .email(t('validation.invalidEmail'))
-      .default(''),
-  }),
+  z
+    .object({
+      newEmail: z
+        .string()
+        .min(1, t('validation.required'))
+        .email(t('validation.invalidEmail'))
+        .default(''),
+    })
+    .refine((data) => data.newEmail !== props.userData.email, {
+      message: t('validation.emailIsSame'),
+      path: ['newEmail'],
+    }),
 )
 export type ChangeEmailFormValues = z.infer<typeof changeEmailSchema.value>
 
