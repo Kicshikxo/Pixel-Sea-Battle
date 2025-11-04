@@ -2,6 +2,7 @@
   <PixelForm
     class="change-email-form"
     :validation-schema="changeEmailSchema"
+    :initial-values="changeEmailInitialValues"
     full-width
     @submit="handleSubmit"
   >
@@ -27,7 +28,6 @@
       autocomplete="email"
       :readonly="disabled || loading"
       :placeholder="$t('page.profile.email')"
-      :value="userData?.email"
     >
       <template #prepend-icon>
         <icon name="pixelarticons:mail" />
@@ -100,6 +100,10 @@ const changeEmailSchema = computed(() =>
     }),
 )
 export type ChangeEmailFormValues = z.infer<typeof changeEmailSchema.value>
+
+const changeEmailInitialValues = computed(() => ({
+  newEmail: props.userData.email,
+}))
 
 function handleResendVerificationEmail() {
   emits('resendVerificationEmail')
