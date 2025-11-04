@@ -26,7 +26,11 @@
       />
     </PixelContainer>
 
-    <PixelModal v-model:show="showRoomLeaveModal" :title="$t('page.room.confirmLeave')">
+    <PixelModal
+      v-model:show="showRoomLeaveModal"
+      :title="$t('page.room.confirmLeave')"
+      :prevent-close="loading.roomLeave"
+    >
       <div class="leave-room-modal">
         <span>
           {{ $t('page.room.confirmLeaveMessage') }}

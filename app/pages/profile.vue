@@ -74,6 +74,7 @@
     <PixelModal
       v-model:show="showConfirmGuestSignOutModal"
       :title="$t('page.profile.confirmLeave')"
+      :prevent-close="loading.signOut"
     >
       <div class="confirm-guest-sign-out-modal">
         <span>

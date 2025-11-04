@@ -35,15 +35,24 @@ import PixelContainer from '~/components/pixel/PixelContainer.vue'
 import TransitionFade from '~/components/transitions/TransitionFade.vue'
 import TransitionSwipe from '~/components/transitions/TransitionSwipe.vue'
 
-const props = defineProps<{
-  title?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    preventClose?: boolean
+  }>(),
+  {
+    title: '',
+    preventClose: false,
+  },
+)
 
 const show = defineModel<boolean>('show', {
   default: false,
 })
 
 function handleClose() {
+  if (props.preventClose) return
+
   show.value = false
 }
 </script>

@@ -46,7 +46,11 @@
       </div>
     </PixelContainer>
 
-    <PixelModal v-model:show="showCreateRoomModal" :title="$t('page.index.room.creating')">
+    <PixelModal
+      v-model:show="showCreateRoomModal"
+      :title="$t('page.index.room.creating')"
+      :prevent-close="loading.createRoom"
+    >
       <template #icon>
         <icon name="pixelarticons:users" />
       </template>
