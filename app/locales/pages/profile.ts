@@ -9,6 +9,24 @@ export default {
     en: 'Email',
     ru: 'Почта',
   },
+  userType: {
+    label: {
+      en: 'User type',
+      ru: 'Тип пользователя',
+    },
+    DEFAULT: {
+      en: 'Default',
+      ru: 'Стандартный',
+    },
+    GOOGLE: {
+      en: 'Google',
+      ru: 'Google',
+    },
+    GUEST: {
+      en: 'Guest',
+      ru: 'Гость',
+    },
+  },
   emailVerified: {
     en: 'Verified',
     ru: 'Подтверждена',

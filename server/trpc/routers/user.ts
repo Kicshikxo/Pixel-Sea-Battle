@@ -1,3 +1,4 @@
+import { UserType } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
@@ -36,9 +37,13 @@ export const userRouter = trpcRouter({
         })
       }
 
+      const userType =
+        user.type === UserType.GUEST ? (user.password ? UserType.DEFAULT : user.type) : user.type
+
       return await prisma.user.update({
         where: { id: ctx.user.id },
         data: {
+          type: userType,
           email: input.email,
           emailVerifiedAt: null,
         },
@@ -72,9 +77,15 @@ export const userRouter = trpcRouter({
         })
       }
 
+      const userType =
+        user.type === UserType.GUEST ? (user.email ? UserType.DEFAULT : user.type) : user.type
+
       return await prisma.user.update({
         where: { id: ctx.user.id },
-        data: { password: bcrypt.hashSync(input.newPassword, 8) },
+        data: {
+          type: userType,
+          password: bcrypt.hashSync(input.newPassword, 8),
+        },
       })
     }),
 })

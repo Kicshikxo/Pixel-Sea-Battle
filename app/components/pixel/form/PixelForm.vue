@@ -7,11 +7,11 @@
     @submit="handleSubmit"
   >
     <TransitionSwipe v-if="animatedTitle">
-      <div class="px-form__title" :key="title">
+      <div v-if="slots.title || title" class="px-form__title" :key="title">
         <slot name="title">{{ title }}</slot>
       </div>
     </TransitionSwipe>
-    <div v-else class="px-form__title">
+    <div v-else-if="slots.title || title" class="px-form__title">
       <slot name="title">{{ title }}</slot>
     </div>
 
@@ -42,6 +42,7 @@ const props = withDefaults(
 const emits = defineEmits<{
   submit: [values: z.infer<T>, formActions: FormActions<z.infer<T>>]
 }>()
+const slots = useSlots()
 
 const form = ref<FormContext<z.infer<T>>>()
 

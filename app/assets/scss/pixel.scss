@@ -68,7 +68,7 @@
   --px-color-shadow-white: #fff4;
 }
 :root,
-.light-mode {
+html.light-mode {
   --px-color-white: #ffffff;
   --px-color-black: #0d1117;
 
@@ -88,7 +88,7 @@
   --px-color-page-loading-indicator: var(--px-color-blue);
 }
 
-.dark-mode {
+html.dark-mode {
   --px-color-white-on-light-black-on-dark: #000;
   --px-color-black-on-light-white-on-dark: #fff;
 

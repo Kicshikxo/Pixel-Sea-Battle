@@ -1,10 +1,10 @@
 <template>
-  <PixelShadow :color="color" :full-width="fullWidth" :full-height="fullHeight">
+  <PixelShadow :color="computedColor" :full-width="fullWidth" :full-height="fullHeight">
     <PixelChamfer :depth="depth" :full-width="fullWidth" :full-height="fullHeight">
       <div
         :class="[
           'px-border',
-          `px-border--${color}`,
+          `px-border--${computedColor}`,
           {
             'px-border--full-width': fullWidth,
             'px-border--full-height': fullHeight,
@@ -29,7 +29,7 @@ const props = withDefaults(
   defineProps<{
     width?: string | number
     depth?: string | number
-    color?: 'dark' | 'light' | 'red' | 'yellow' | 'green' | 'blue'
+    color?: 'adaptive' | 'dark' | 'light' | 'red' | 'yellow' | 'green' | 'blue'
     rainbow?: boolean
     fullWidth?: boolean
     fullHeight?: boolean
@@ -42,6 +42,12 @@ const props = withDefaults(
     fullWidth: false,
     fullHeight: false,
   },
+)
+
+const colorMode = useColorMode()
+
+const computedColor = computed(() =>
+  props.color === 'adaptive' ? (colorMode.value === 'light' ? 'dark' : 'light') : props.color,
 )
 </script>
 

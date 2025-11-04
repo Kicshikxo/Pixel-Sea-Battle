@@ -1,26 +1,30 @@
 <template>
   <div class="player-board">
-    <table ref="boardTable" class="player-board__table">
-      <tbody>
-        <tr v-for="row in 11" :key="row" class="player-board__table__row">
-          <td
-            v-for="column in 11"
-            :key="column"
-            :class="[
-              'player-board__table__cell',
-              { 'player-board__table__cell--label': row === 1 || column === 1 },
-            ]"
-            @click="handleClickCell(row, column)"
-          >
-            <span>{{ getCellLabel(row, column) }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <PixelShadow color="adaptive">
+      <table ref="boardTable" class="player-board__table">
+        <tbody>
+          <tr v-for="row in 11" :key="row" class="player-board__table__row">
+            <td
+              v-for="column in 11"
+              :key="column"
+              :class="[
+                'player-board__table__cell',
+                { 'player-board__table__cell--label': row === 1 || column === 1 },
+              ]"
+              @click="handleClickCell(row, column)"
+            >
+              <span>{{ getCellLabel(row, column) }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </PixelShadow>
   </div>
 </template>
 
 <script lang="ts" setup>
+import PixelShadow from '~/components/pixel/PixelShadow.vue'
+
 const { t } = useI18n()
 
 const CELL_SIZE = 32

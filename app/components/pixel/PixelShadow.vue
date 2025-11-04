@@ -2,7 +2,7 @@
   <div
     :class="[
       'px-shadow',
-      `px-shadow--${color}`,
+      `px-shadow--${computedColor}`,
       { 'px-shadow--full-width': fullWidth, 'px-shadow--full-height': fullHeight },
     ]"
   >
@@ -13,7 +13,7 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    color?: 'dark' | 'light' | 'red' | 'yellow' | 'green' | 'blue'
+    color?: 'adaptive' | 'dark' | 'light' | 'red' | 'yellow' | 'green' | 'blue'
     fullWidth?: boolean
     fullHeight?: boolean
   }>(),
@@ -22,6 +22,12 @@ const props = withDefaults(
     fullWidth: false,
     fullHeight: false,
   },
+)
+
+const colorMode = useColorMode()
+
+const computedColor = computed(() =>
+  props.color === 'adaptive' ? (colorMode.value === 'light' ? 'dark' : 'light') : props.color,
 )
 </script>
 
