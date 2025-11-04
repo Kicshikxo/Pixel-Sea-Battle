@@ -28,6 +28,7 @@
                         @click="$emit('join-room', room.id)"
                         :label="$t('page.index.room.join')"
                         :disabled="joinRoomLoading"
+                        :loading="room.id === loadingRoomId"
                         small
                       />
                     </div>
@@ -58,11 +59,13 @@ const props = withDefaults(
     title: string
     rooms?: (Room & { players: (RoomPlayer & { user: User })[] })[]
     roomsLoading?: boolean
+    loadingRoomId?: string | null
     joinRoomLoading?: boolean
   }>(),
   {
     rooms: () => [],
     roomsLoading: false,
+    loadingRoomId: null,
     joinRoomLoading: false,
   },
 )

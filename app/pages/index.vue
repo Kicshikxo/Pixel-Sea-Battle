@@ -26,6 +26,7 @@
             :title="$t('page.index.room.listActive')"
             :rooms="roomsStore.activeRooms"
             :rooms-loading="roomsLoading"
+            :loading-room-id="joinRoomId"
             :join-room-loading="joinRoomLoading"
             @join-room="handleJoinRoom"
           />
@@ -37,6 +38,7 @@
             :title="$t('page.index.room.listPublic')"
             :rooms="roomsStore.publicRooms ?? []"
             :rooms-loading="roomsLoading"
+            :loading-room-id="joinRoomId"
             :join-room-loading="joinRoomLoading"
             @join-room="handleJoinRoom"
           />
@@ -112,6 +114,7 @@ const showCreateRoomModal = ref(false)
 const createRoomLoading = ref(false)
 const roomsLoading = ref(true)
 const joinRoomLoading = ref(false)
+const joinRoomId = ref<string | null>(null)
 const quickMatchLoading = ref(false)
 
 onMounted(async () => {
@@ -165,10 +168,12 @@ async function handleCreateRoom(values: CreateRoomFormValues) {
 
 async function handleJoinRoom(id: string) {
   joinRoomLoading.value = true
+  joinRoomId.value = id
   try {
     await router.push({ name: 'room-id', params: { id } })
   } finally {
     joinRoomLoading.value = false
+    joinRoomId.value = null
   }
 }
 
